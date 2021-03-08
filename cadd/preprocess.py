@@ -60,3 +60,50 @@ def calc_pIC50(data):
     except KeyError:
         print('standard_value column not found')
     return values
+
+
+class SmilesConverter:
+    def __init__(self, smiles):
+        self.smiles = smiles
+        self.alphabet = self._alphabet
+
+    @property
+    def _alphabet(self):
+        alphabet = []
+        for smile in self.smiles:
+            for i, s in enumerate(smile):
+                if smile[i] not in alphabet:
+                    alphabet.append(s)
+        return alphabet
+
+    @staticmethod
+    def _smile_to_array(smile, alphabet):
+        height = len(alphabet)
+        width = len(smile)
+        array = np.zeros((height, width))
+        for i in range(height):
+            for j in range(width):
+                if smile[j] == alphabet[i]:
+                    array[i, j] = 1
+        return array
+
+    @staticmethod
+    def _pad_data(data, max_width):
+        for i, arr in enumerate(data):
+            to_padd = max_width - arr.shape[1]
+            data[i] = np.pad(arr, ((0, 0), (0, to_padd)), 'constant')
+        return data
+
+    def smile_to_one_hot(self):
+        data = []
+        max_width = 0
+        for smile in self.smiles:
+            arr = self._smile_to_array(smile, self.alphabet)
+            data.append(arr)
+            if arr.shape[1] > max_width:
+                max_width = arr.shape[1]
+        data = self._pad_data(data, max_width)
+        data = np.array(data)
+        return data
+
+
