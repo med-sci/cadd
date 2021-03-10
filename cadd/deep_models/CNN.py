@@ -1,12 +1,12 @@
 from tensorflow.keras.layers import Conv2D, Input, MaxPool2D, Activation, GlobalMaxPooling2D, Dense, Flatten
 from tensorflow.keras.models import Model
 
+
 class CnnModel:
     def __init__(self):
-        self.input_shape =
+        self.input_shape = None  # fix it
 
     def build_model(self):
-
         x_input = Input(self.input_shape)
 
         # first convolution
